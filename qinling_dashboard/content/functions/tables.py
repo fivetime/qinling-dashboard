@@ -40,7 +40,7 @@ class CreateFunctionVersion(tables.LinkAction):
     url = "horizon:project:functions:create_version"
     classes = ("ajax-modal",)
     icon = "plus"
-    policy_rules = (("function_engine", "function:version_create"),)
+    policy_rules = (("function_engine", "function_version:create"),)
 
     def allowed(self, request, datum):
         """Function versioning is only allowed for package type function."""
@@ -65,7 +65,7 @@ class DownloadFunction(tables.LinkAction):
     verbose_name = _("Download Function")
     url = "horizon:project:functions:download"
     icon = "download"
-    policy_rules = (("function_engine", "function:download"),)
+    policy_rules = (("function_engine", "function:get"),)
 
     def allowed(self, request, datum):
         """Function downloading is only allowed for package type function."""
@@ -209,7 +209,7 @@ class CreateFunctionExecution(tables.LinkAction):
     verbose_name = _("Create Execution")
     url = "horizon:project:functions:create_execution"
     classes = ("ajax-modal",)
-    policy_rules = (("function_engine", "function_execution:create"),)
+    policy_rules = (("function_engine", "execution:create"),)
     icon = "plus"
 
     def get_link_url(self, datum):

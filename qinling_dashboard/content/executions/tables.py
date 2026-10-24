@@ -28,7 +28,7 @@ class CreateExecution(tables.LinkAction):
     verbose_name = _("Create Execution")
     url = "horizon:project:executions:create"
     classes = ("ajax-modal", "btn-create")
-    policy_rules = (("function_engine", "function_execution:create"),)
+    policy_rules = (("function_engine", "execution:create"),)
     icon = "plus"
     ajax = True
 
@@ -38,7 +38,7 @@ class LogLink(tables.LinkAction):
     verbose_name = _("Show Execution Logs")
     url = "horizon:project:executions:detail"
     classes = ("btn-console",)
-    policy_rules = (("function_engine", "function_execution:log_show"),)
+    policy_rules = (("function_engine", "execution:log_show"),)
 
     def get_link_url(self, datum):
         base_url = super(LogLink, self).get_link_url(datum)
@@ -46,7 +46,7 @@ class LogLink(tables.LinkAction):
 
 
 class DeleteExecution(tables.DeleteAction):
-    policy_rules = (("function_engine", "function_execution:delete"),)
+    policy_rules = (("function_engine", "execution:delete"),)
     help_text = _("Deleted executions are not recoverable.")
 
     @staticmethod

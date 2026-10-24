@@ -38,20 +38,19 @@ The plugin setup files are found in ``<qinling-dashboard-dir>/enabled``.
    environment or distribution used. The path above is one used in Ubuntu
    horizon package.
 
-Configure the policy file for qinling-dashboard in OpenStack Dashboard
-``local_settings.py``.
+Register qinling's policies with OpenStack Dashboard, so that the panels
+only offer the actions qinling allows the user, in ``local_settings.py`` or
+a file of ``local_settings.d``:
 
 .. code-block:: python
 
-   POLICY_FILES['function_engine'] = '<qinling-dashboard-dir>/conf/qinling_policy.json'
+   from qinling_dashboard import conf as qinling_conf
+   qinling_conf.register_policies(POLICY_FILES, DEFAULT_POLICY_FILES)
 
-.. note::
-
-   If your ``local_settings.py``  has no ``POLICY_FILES`` yet,
-   you need to define the default ``POLICY_FILES`` in
-   ``local_settings.py``. If you use the example ``local_settings.py`` file
-   from horizon, what you need is to uncomment ``POLICY_FILES`` (which contains
-   the default values).
+Without it Horizon checks no policy of qinling and every action is offered.
+``qinling_dashboard/conf/default_policies/qinling.yaml`` holds qinling's
+default policies, ``qinling_dashboard/conf/qinling_policy.yaml`` the
+overrides, which should be those of the ``policy.yaml`` qinling uses.
 
 Compile the translation message catalogs of qinling-dashboard.
 

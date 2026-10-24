@@ -1,0 +1,385 @@
+# Default policies of qinling, generated from its policy-in-code by
+# tools/generate_default_policies.py. Do not edit.
+- check_str: role:admin
+  description: 'Decides what is required for the ''is_admin:True'' check to succeed:
+    an admin sees and manages the resources of every project.'
+  name: context_is_admin
+  operations: []
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: List executions.
+  name: execution:get_all
+  operations:
+  - method: GET
+    path: /v1/executions
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: List the executions of all projects.
+  name: execution:get_all:all_projects
+  operations:
+  - method: GET
+    path: /v1/executions?all_projects=true
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show an execution.
+  name: execution:get
+  operations:
+  - method: GET
+    path: /v1/executions/{execution_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show the log of an execution.
+  name: execution:log_show
+  operations:
+  - method: GET
+    path: /v1/executions/{execution_id}/log
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Run a function.
+  name: execution:create
+  operations:
+  - method: POST
+    path: /v1/executions
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Delete an execution.
+  name: execution:delete
+  operations:
+  - method: DELETE
+    path: /v1/executions/{execution_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: List function aliases.
+  name: function_alias:get_all
+  operations:
+  - method: GET
+    path: /v1/aliases
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: List the function aliases of all projects.
+  name: function_alias:get_all:all_projects
+  operations:
+  - method: GET
+    path: /v1/aliases?all_projects=true
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show a function alias.
+  name: function_alias:get
+  operations:
+  - method: GET
+    path: /v1/aliases/{alias_name}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Create a function alias.
+  name: function_alias:create
+  operations:
+  - method: POST
+    path: /v1/aliases
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Update a function alias.
+  name: function_alias:update
+  operations:
+  - method: PUT
+    path: /v1/aliases/{alias_name}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Delete a function alias.
+  name: function_alias:delete
+  operations:
+  - method: DELETE
+    path: /v1/aliases/{alias_name}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: List the versions of a function.
+  name: function_version:get_all
+  operations:
+  - method: GET
+    path: /v1/functions/{function_id}/versions
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show or download a function version.
+  name: function_version:get
+  operations:
+  - method: GET
+    path: /v1/functions/{function_id}/versions/{version}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Create a function version.
+  name: function_version:create
+  operations:
+  - method: POST
+    path: /v1/functions/{function_id}/versions
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Delete a function version.
+  name: function_version:delete
+  operations:
+  - method: DELETE
+    path: /v1/functions/{function_id}/versions/{version}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Add workers to a function version.
+  name: function_version:scale_up
+  operations:
+  - method: POST
+    path: /v1/functions/{function_id}/versions/{version}/scale_up
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Remove workers of a function version.
+  name: function_version:scale_down
+  operations:
+  - method: POST
+    path: /v1/functions/{function_id}/versions/{version}/scale_down
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Release all workers of a function version.
+  name: function_version:detach
+  operations:
+  - method: POST
+    path: /v1/functions/{function_id}/versions/{version}/detach
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: List functions.
+  name: function:get_all
+  operations:
+  - method: GET
+    path: /v1/functions
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: List the functions of all projects.
+  name: function:get_all:all_projects
+  operations:
+  - method: GET
+    path: /v1/functions?all_projects=true
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show or download a function.
+  name: function:get
+  operations:
+  - method: GET
+    path: /v1/functions/{function_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Create a function.
+  name: function:create
+  operations:
+  - method: POST
+    path: /v1/functions
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Update a function.
+  name: function:update
+  operations:
+  - method: PUT
+    path: /v1/functions/{function_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Delete a function.
+  name: function:delete
+  operations:
+  - method: DELETE
+    path: /v1/functions/{function_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Add workers to a function.
+  name: function:scale_up
+  operations:
+  - method: POST
+    path: /v1/functions/{function_id}/scale_up
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Remove workers of a function.
+  name: function:scale_down
+  operations:
+  - method: POST
+    path: /v1/functions/{function_id}/scale_down
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Release all workers of a function.
+  name: function:detach
+  operations:
+  - method: POST
+    path: /v1/functions/{function_id}/detach
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: List the workers of a function.
+  name: function_worker:get_all
+  operations:
+  - method: GET
+    path: /v1/functions/{function_id}/workers
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: List jobs.
+  name: job:get_all
+  operations:
+  - method: GET
+    path: /v1/jobs
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: List the jobs of all projects.
+  name: job:get_all:all_projects
+  operations:
+  - method: GET
+    path: /v1/jobs?all_projects=true
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show a job.
+  name: job:get
+  operations:
+  - method: GET
+    path: /v1/jobs/{job_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Create a job.
+  name: job:create
+  operations:
+  - method: POST
+    path: /v1/jobs
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Update a job.
+  name: job:update
+  operations:
+  - method: PUT
+    path: /v1/jobs/{job_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Delete a job.
+  name: job:delete
+  operations:
+  - method: DELETE
+    path: /v1/jobs/{job_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: List runtimes.
+  name: runtime:get_all
+  operations:
+  - method: GET
+    path: /v1/runtimes
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show a runtime.
+  name: runtime:get
+  operations:
+  - method: GET
+    path: /v1/runtimes/{runtime_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Create a runtime.
+  name: runtime:create
+  operations:
+  - method: POST
+    path: /v1/runtimes
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Update a runtime.
+  name: runtime:update
+  operations:
+  - method: PUT
+    path: /v1/runtimes/{runtime_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Delete a runtime.
+  name: runtime:delete
+  operations:
+  - method: DELETE
+    path: /v1/runtimes/{runtime_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: Show the worker pool of a runtime.
+  name: runtime_pool:get_all
+  operations:
+  - method: GET
+    path: /v1/runtimes/{runtime_id}/pool
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: List webhooks.
+  name: webhook:get_all
+  operations:
+  - method: GET
+    path: /v1/webhooks
+  scope_types:
+  - project
+- check_str: rule:context_is_admin
+  description: List the webhooks of all projects.
+  name: webhook:get_all:all_projects
+  operations:
+  - method: GET
+    path: /v1/webhooks?all_projects=true
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:reader and project_id:%(project_id)s)
+  description: Show a webhook.
+  name: webhook:get
+  operations:
+  - method: GET
+    path: /v1/webhooks/{webhook_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Create a webhook.
+  name: webhook:create
+  operations:
+  - method: POST
+    path: /v1/webhooks
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Update a webhook.
+  name: webhook:update
+  operations:
+  - method: PUT
+    path: /v1/webhooks/{webhook_id}
+  scope_types:
+  - project
+- check_str: rule:context_is_admin or (role:member and project_id:%(project_id)s)
+  description: Delete a webhook.
+  name: webhook:delete
+  operations:
+  - method: DELETE
+    path: /v1/webhooks/{webhook_id}
+  scope_types:
+  - project
