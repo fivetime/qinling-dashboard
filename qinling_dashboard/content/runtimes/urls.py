@@ -10,13 +10,13 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
-from django.conf.urls import url
+from django.urls import re_path
 
 from qinling_dashboard.content.runtimes import views
 
 urlpatterns = [
-    url(r'^$', views.IndexView.as_view(), name='index'),
-    url(r'^(?P<runtime_id>[^/]+)/$',
-        views.DetailView.as_view(), name='detail'),
-    url(r'^create', views.CreateRuntimeView.as_view(), name='create'),
+    re_path(r'^$', views.IndexView.as_view(), name='index'),
+    re_path(r'^(?P<runtime_id>[^/]+)/$',
+            views.DetailView.as_view(), name='detail'),
+    re_path(r'^create', views.CreateRuntimeView.as_view(), name='create'),
 ]

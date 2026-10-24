@@ -12,16 +12,22 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+from openstack_dashboard.test.test_data import utils
+
+TestDataContainer = utils.TestDataContainer
+
 
 def load_test_data(load_onto=None):
+    """Load the qinling test data on top of Horizon's.
+
+    Horizon's test case already loads its own test data, the keystone
+    data among it, so only qinling's is added here.
+    """
     from qinling_dashboard.test.test_data import exceptions
-    from qinling_dashboard.test.test_data import keystone_data
     from qinling_dashboard.test.test_data import qinling_data
 
-    # The order of these loaders matters, some depend on others.
     loaders = (
         exceptions.data,
-        keystone_data.data,
         qinling_data.data,
     )
     if load_onto:
@@ -29,94 +35,4 @@ def load_test_data(load_onto=None):
             data_func(load_onto)
         return load_onto
     else:
-        return TestData(*loaders)
-
-
-class TestData(object):
-    """Holder object for test data.
-
-    Any functions passed to the init method will be called with the
-    ``TestData`` object as their only argument.
-    They can then load data onto the object as desired.
-
-    The idea is to use the instantiated object like this::
-
-        >>> import qinling_data
-        >>> TEST = TestData(qinling_data.data)
-        >>> TEST.runtimes.list()
-        [<Runtime: runtime>, <Runtime: runtime>]
-        >>> TEST.runtimes.first()
-        <Image: visible_image>
-
-    You can load as little or as much data as you like as long as the loaders
-    don't conflict with each other.
-
-    See the
-    :class:`~openstack_dashboard.test.test_data.utils.TestDataContainer`
-    class for a list of available methods.
-    """
-    def __init__(self, *args):
-        for data_func in args:
-            data_func(self)
-
-
-class TestDataContainer(object):
-    """A container for test data objects.
-
-    The behavior of this class is meant to mimic a "manager" class, which
-    has convenient shortcuts for common actions like "list", "filter", "get",
-    and "add".
-    """
-    def __init__(self):
-        self._objects = []
-
-    def add(self, *args):
-        """Add a new object to this container.
-
-        Generally this method should only be used during data loading, since
-        adding data during a test can affect the results of other tests.
-        """
-        for obj in args:
-            if obj not in self._objects:
-                self._objects.append(obj)
-
-    def list(self):
-        """Returns a list of all objects in this container."""
-        return self._objects
-
-    def filter(self, filtered=None, **kwargs):
-        """Returns objects whose attributes match the given kwargs."""
-        if filtered is None:
-            filtered = self._objects
-        try:
-            key, value = kwargs.popitem()
-        except KeyError:
-            # We're out of filters, return
-            return filtered
-
-        def get_match(obj):
-            return hasattr(obj, key) and getattr(obj, key) == value
-
-        filtered = [obj for obj in filtered if get_match(obj)]
-        return self.filter(filtered=filtered, **kwargs)
-
-    def get(self, **kwargs):
-        """Returns a single object whose attributes match the given kwargs.
-
-        An error will be raised if the arguments
-        provided don't return exactly one match.
-        """
-        matches = self.filter(**kwargs)
-        if not matches:
-            raise Exception("No matches found.")
-        elif len(matches) > 1:
-            raise Exception("Multiple matches found.")
-        else:
-            return matches.pop()
-
-    def first(self):
-        """Returns the first object from this container."""
-        return self._objects[0]
-
-    def count(self):
-        return len(self._objects)
+        return utils.TestData(*loaders)

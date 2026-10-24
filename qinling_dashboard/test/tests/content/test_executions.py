@@ -12,11 +12,9 @@
 
 import json
 from unittest import mock
-
+from urllib.parse import unquote
 
 from django.urls import reverse
-
-from django.utils.http import urlunquote
 
 from qinling_dashboard import api
 
@@ -240,8 +238,8 @@ class ExecutionsTests(test.TestCase):
         qclient = mock_qinlingclient.return_value
         qclient.function_executions.get.return_value = data_execution
 
-        url = urlunquote(reverse('horizon:project:executions:detail',
-                                 args=[execution_id]))
+        url = unquote(reverse('horizon:project:executions:detail',
+                              args=[execution_id]))
         res = self.client.get(url)
 
         result_execution = res.context['execution']
@@ -259,8 +257,8 @@ class ExecutionsTests(test.TestCase):
         qclient = mock_qinlingclient.return_value
         qclient.function_executions.get.side_effect = self.exceptions.qinling
 
-        url = urlunquote(reverse('horizon:project:executions:detail',
-                                 args=[execution_id]))
+        url = unquote(reverse('horizon:project:executions:detail',
+                              args=[execution_id]))
         res = self.client.get(url)
 
         redir_url = INDEX_URL
@@ -281,7 +279,7 @@ class ExecutionsTests(test.TestCase):
         self.mock_execution_log_get.return_value = log_contents
 
         url_base = 'horizon:project:executions:detail_execution_logs'
-        url = urlunquote(reverse(url_base, args=[execution_id]))
+        url = unquote(reverse(url_base, args=[execution_id]))
         res = self.client.get(url)
 
         result_logs = res.context['execution_logs']
@@ -310,7 +308,7 @@ class ExecutionsTests(test.TestCase):
         self.mock_execution_log_get.side_effect = self.exceptions.qinling
 
         url_base = 'horizon:project:executions:detail_execution_logs'
-        url = urlunquote(reverse(url_base, args=[execution_id]))
+        url = unquote(reverse(url_base, args=[execution_id]))
         res = self.client.get(url)
 
         result_logs = res.context['execution_logs']

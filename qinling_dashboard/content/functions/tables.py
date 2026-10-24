@@ -14,8 +14,8 @@ from django.urls import reverse
 
 from django.utils.http import urlencode
 
-from django.utils.translation import ugettext_lazy as _
-from django.utils.translation import ungettext_lazy
+from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext_lazy
 
 from horizon import tables
 
@@ -81,7 +81,7 @@ class DeleteFunction(tables.DeleteAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Function",
             u"Delete Functions",
             count
@@ -89,7 +89,7 @@ class DeleteFunction(tables.DeleteAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Function",
             u"Delete Functions",
             count
@@ -178,7 +178,7 @@ class DeleteFunctionVersion(tables.DeleteAction):
 
     @staticmethod
     def action_present(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Function Version",
             u"Delete Function Versions",
             count
@@ -186,7 +186,7 @@ class DeleteFunctionVersion(tables.DeleteAction):
 
     @staticmethod
     def action_past(count):
-        return ungettext_lazy(
+        return ngettext_lazy(
             u"Delete Function Version",
             u"Delete Function Versions",
             count

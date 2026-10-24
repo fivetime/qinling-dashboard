@@ -11,9 +11,9 @@
 # under the License.
 
 from unittest import mock
+from urllib.parse import unquote
 
 from django.urls import reverse
-from django.utils.http import urlunquote
 
 from qinling_dashboard import api
 from qinling_dashboard.test import helpers as test
@@ -120,8 +120,8 @@ class RuntimesTests(test.TestCase):
         runtime_id = self.runtimes.first().id
         self.mock_runtime_get.return_value = self.runtimes.first()
 
-        url = urlunquote(reverse('horizon:project:runtimes:detail',
-                                 args=[runtime_id]))
+        url = unquote(reverse('horizon:project:runtimes:detail',
+                              args=[runtime_id]))
         res = self.client.get(url)
 
         result_runtime = res.context['runtime']
@@ -143,8 +143,8 @@ class RuntimesTests(test.TestCase):
         runtime_id = self.runtimes.first().id
         self.mock_runtime_get.side_effect = self.exceptions.qinling
 
-        url = urlunquote(reverse('horizon:project:runtimes:detail',
-                                 args=[runtime_id]))
+        url = unquote(reverse('horizon:project:runtimes:detail',
+                              args=[runtime_id]))
 
         res = self.client.get(url)
 

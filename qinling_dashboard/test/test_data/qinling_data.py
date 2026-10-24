@@ -10,6 +10,8 @@
 #    License for the specific language governing permissions and limitations
 #    under the License.
 
+import copy
+
 from qinlingclient.v1 import function
 from qinlingclient.v1 import function_execution
 from qinlingclient.v1 import function_version
@@ -25,7 +27,23 @@ EXECUTION_ID_BASE = "f0b5d7f5-d1f1-4f3e-9080-16e4cd918f9{0}"
 VERSION_ID_BASE = "30c3e142-2850-4a89-90a7-0a4e4d654f{0}{1}"
 
 
+SERVICE = {
+    "type": "function-engine",
+    "name": "qinling",
+    "endpoints_links": [],
+    "endpoints": [
+        {"region": "RegionOne",
+         "adminURL": "http://admin.qinling.example.com:7070/v1",
+         "publicURL": "http://public.qinling.example.com:7070/v1",
+         "internalURL": "http://int.qinling.example.com:7070/v1"}]}
+
+
 def data(TEST):
+    # Horizon's test data has no function-engine service; the panels
+    # need it in the catalog to be accessible.
+    if hasattr(TEST, 'service_catalog'):
+        TEST.service_catalog.append(copy.deepcopy(SERVICE))
+
     TEST.runtimes = utils.TestDataContainer()
     TEST.functions = utils.TestDataContainer()
     TEST.executions = utils.TestDataContainer()
