@@ -1,0 +1,21 @@
+---
+features:
+  - |
+    The panels show their actions by the policies of qinling. The package
+    ships qinling's default policies, and
+    ``qinling_dashboard.conf.register_policies()`` adds them to
+    ``POLICY_FILES`` and ``DEFAULT_POLICY_FILES`` from a
+    ``local_settings.d`` snippet; see the installation guide.
+  - |
+    A Simplified Chinese (``zh_Hans``) translation.
+upgrade:
+  - |
+    ``qinling_dashboard/conf/qinling_policy.json`` is gone. Deployments that
+    pointed ``POLICY_FILES['function_engine']`` at it should call
+    ``register_policies()`` instead; overrides go in
+    ``qinling_policy.yaml``.
+fixes:
+  - |
+    Creating, deleting and showing the logs of an execution, creating a
+    function version and downloading a function checked policy rules that
+    qinling does not have, so the buttons showed whatever the policies said.

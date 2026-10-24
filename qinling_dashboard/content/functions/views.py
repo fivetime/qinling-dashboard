@@ -303,7 +303,7 @@ def download_function(request, function_id):
         return response
     except q_exc.NOT_FOUND as ne:
         messages.error(request,
-                       _('Error because file not found function: %s') % ne)
+                       _('Function code not found: %s') % ne)
     except Exception as e:
         messages.error(request, _('Error downloading function: %s') % e)
     # Not back to the download URL itself, which would fail again.

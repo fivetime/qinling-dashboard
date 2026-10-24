@@ -147,7 +147,7 @@ class FunctionsTable(tables.DataTable):
     updated_at = tables.Column("updated_at",
                                verbose_name=_("Updated At"))
 
-    cpu = tables.Column("cpu", verbose_name=_("CPU  (Milli CPU)"))
+    cpu = tables.Column("cpu", verbose_name=_("CPU (Milli CPU)"))
     memory_size = tables.Column(get_memory_size,
                                 verbose_name=_("Memory Size (Bytes)"))
 

@@ -166,7 +166,8 @@ class CreateFunctionForm(forms.SelfHandlingForm):
 
     image = forms.CharField(
         label=UPLOAD_IMAGE_LABEL,
-        help_text=_('Image name in Docker hub.'),
+        help_text=_('Container image name, '
+                    'e.g. docker.io/library/python:3.14.'),
         validators=[validators.validate_one_line_string],
         widget=forms.TextInput(attrs={
             'class': 'switched',

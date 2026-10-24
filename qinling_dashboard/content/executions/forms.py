@@ -51,8 +51,8 @@ class CreateExecutionForm(forms.SelfHandlingForm):
 
     input_params = forms.CharField(
         label=_('Input'),
-        help_text=_('Specify input parmeters like name1=value2. '
-                    'One line is equivalent of one input parameter.'),
+        help_text=_('Specify input parameters like name1=value1. '
+                    'One line is one input parameter.'),
         validators=[validators.validate_key_value_pairs],
         widget=forms.widgets.Textarea(),
         required=False)
