@@ -17,7 +17,7 @@ from django import shortcuts
 from django.http import HttpResponse
 from django.urls import reverse
 from django.urls import reverse_lazy
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 from horizon import exceptions
 from horizon import forms
@@ -306,4 +306,5 @@ def download_function(request, function_id):
                        _('Error because file not found function: %s') % ne)
     except Exception as e:
         messages.error(request, _('Error downloading function: %s') % e)
-        return shortcuts.redirect(request.build_absolute_uri())
+    # Not back to the download URL itself, which would fail again.
+    return shortcuts.redirect(reverse('horizon:project:functions:index'))

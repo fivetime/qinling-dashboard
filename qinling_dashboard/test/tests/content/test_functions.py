@@ -10,6 +10,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+from urllib.parse import unquote
+
 import copy
 from unittest import mock
 
@@ -19,7 +21,6 @@ from django.http import response
 
 from django.urls import reverse
 
-from django.utils.http import urlunquote
 
 from qinling_dashboard import api
 from qinling_dashboard.content.functions import forms as project_fm
@@ -705,16 +706,25 @@ class FunctionsTests(test.TestCase):
         url = reverse('horizon:project:functions:download', args=[function_id])
         res = self.client.get(url)
 
-        # res._headers[content-disposition] will be set like
-        # ('Content-Disposition',
-        #  'attachment; filename=qinling-function-<function_id>.zip')
-        result_header = res._headers['content-disposition'][1]
+        result_header = res.headers['Content-Disposition']
 
         expected_header = \
             'attachment; filename=qinling-function-%s.zip' % function_id
         self.assertEqual(result_header, expected_header)
         qclient.functions.get.assert_called_once_with(function_id,
                                                       download=True)
+
+    @mock.patch.object(api.qinling, 'qinlingclient')
+    def test_function_download_failed(self, mock_qinlingclient):
+        function_id = self.functions.first().id
+        qclient = mock_qinlingclient.return_value
+        qclient.functions.get.side_effect = self.exceptions.qinling
+
+        url = reverse('horizon:project:functions:download', args=[function_id])
+        res = self.client.get(url)
+
+        self.assertRedirectsNoFollow(res, INDEX_URL)
+        self.assertMessageCount(error=1)
 
     @mock.patch.object(api.qinling, 'qinlingclient')
     def test_function_delete(self, mock_qinlingclient):
@@ -779,8 +789,8 @@ class FunctionsTests(test.TestCase):
         qclient = mock_qinlingclient.return_value
         qclient.functions.get.return_value = self.functions.first()
 
-        url = urlunquote(reverse('horizon:project:functions:detail',
-                                 args=[function_id]))
+        url = unquote(reverse('horizon:project:functions:detail',
+                              args=[function_id]))
         res = self.client.get(url)
 
         result_function = res.context['function']
@@ -799,8 +809,8 @@ class FunctionsTests(test.TestCase):
         function_id = self.functions.first().id
         self.mock_function_get.side_effect = self.exceptions.qinling
 
-        url = urlunquote(reverse('horizon:project:functions:detail',
-                                 args=[function_id]))
+        url = unquote(reverse('horizon:project:functions:detail',
+                              args=[function_id]))
 
         res = self.client.get(url)
 
@@ -828,7 +838,7 @@ class FunctionsTests(test.TestCase):
         qclient.functions.get.return_value = data_function
 
         url_base = 'horizon:project:functions:detail_executions'
-        url = urlunquote(reverse(url_base, args=[function_id]))
+        url = unquote(reverse(url_base, args=[function_id]))
         res = self.client.get(url)
 
         result_executions = res.context['function_executions_table'].data
@@ -855,7 +865,7 @@ class FunctionsTests(test.TestCase):
         qclient.functions.get.return_value = data_function
 
         url_base = 'horizon:project:functions:detail_executions'
-        url = urlunquote(reverse(url_base, args=[function_id]))
+        url = unquote(reverse(url_base, args=[function_id]))
         res = self.client.get(url)
 
         result_executions = res.context['function_executions_table'].data
@@ -885,7 +895,7 @@ class FunctionsTests(test.TestCase):
         qclient.functions.get.return_value = data_function
 
         url_base = 'horizon:project:functions:detail_executions'
-        url = urlunquote(reverse(url_base, args=[function_id]))
+        url = unquote(reverse(url_base, args=[function_id]))
         res = self.client.get(url)
 
         result_versions = res.context['function_versions_table'].data
@@ -912,7 +922,7 @@ class FunctionsTests(test.TestCase):
         qclient.functions.get.return_value = data_function
 
         url_base = 'horizon:project:functions:detail_executions'
-        url = urlunquote(reverse(url_base, args=[function_id]))
+        url = unquote(reverse(url_base, args=[function_id]))
         res = self.client.get(url)
 
         result_versions = res.context['function_versions_table'].data
@@ -943,8 +953,8 @@ class FunctionsTests(test.TestCase):
         self.mock_version_get.return_value = data_version
         self.mock_versions_list.return_value = data_versions
 
-        url = urlunquote(reverse('horizon:project:functions:version_detail',
-                                 args=[function_id, version_number]))
+        url = unquote(reverse('horizon:project:functions:version_detail',
+                              args=[function_id, version_number]))
         res = self.client.get(url)
 
         result_version = res.context['version']
