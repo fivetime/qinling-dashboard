@@ -76,6 +76,22 @@ class RuntimesTests(test.TestCase):
 
     @test.create_mocks({
         api.qinling: [
+            'runtime_create',
+        ]})
+    def test_runtime_create_with_orchestrator(self):
+        self.mock_runtime_create.return_value = self.runtimes.first()
+
+        url = reverse('horizon:project:runtimes:create')
+        res = self.client.post(url, {'image': 'dummy/dockerimage',
+                                     'orchestrator': 'zun'})
+
+        self.assertNoFormErrors(res)
+        self.mock_runtime_create.assert_called_once_with(
+            test.IsHttpRequest(), image='dummy/dockerimage',
+            orchestrator='zun')
+
+    @test.create_mocks({
+        api.qinling: [
             'runtimes_list',
         ]})
     def test_index(self):

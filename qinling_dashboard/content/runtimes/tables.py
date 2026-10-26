@@ -58,6 +58,10 @@ class RuntimesTable(tables.DataTable):
     image = tables.Column("image",
                           verbose_name=_("Image"))
 
+    orchestrator = tables.Column(
+        lambda r: getattr(r, 'orchestrator', None) or _("Default"),
+        verbose_name=_("Orchestrator"))
+
     created_at = tables.Column("created_at",
                                verbose_name=_("Created At"))
 

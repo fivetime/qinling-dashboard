@@ -13,6 +13,7 @@
 from urllib.parse import unquote
 
 import copy
+import json
 from unittest import mock
 
 from django.core.files import uploadedfile
@@ -48,6 +49,22 @@ FILE_CONTENT = b'DUMMY_FILE'
 
 
 class FunctionsTests(test.TestCase):
+
+    def setUp(self):
+        super(FunctionsTests, self).setUp()
+        # The networks and security groups the forms offer.
+        nets = [mock.Mock(id='net-1', name_or_id='tenant-net',
+                          **{'router:external': False}),
+                mock.Mock(id='ext-1', name_or_id='public',
+                          **{'router:external': True})]
+        groups = [mock.Mock(), mock.Mock()]
+        groups[0].name, groups[1].name = 'web', 'db'
+        for name, value in (('network_list_for_tenant', nets),
+                            ('security_group_list', groups)):
+            p = mock.patch.object(project_fm.os_api.neutron, name,
+                                  return_value=value)
+            p.start()
+            self.addCleanup(p.stop)
 
     def _mock_function_version_list(self, mock_qinlingclient):
 
@@ -95,8 +112,8 @@ class FunctionsTests(test.TestCase):
             "function_id": func.id,
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "image",
             "image": image,
         })
@@ -136,8 +153,8 @@ class FunctionsTests(test.TestCase):
             "function_id": func.id,
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "swift",
             "entry_swift": "main.main",
             "swift_container": swift_container,
@@ -225,8 +242,8 @@ class FunctionsTests(test.TestCase):
             "function_id": func.id,
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "package",
             "entry": "main.main",
             "package_file": temp_file,
@@ -330,8 +347,8 @@ class FunctionsTests(test.TestCase):
         form_data.update({
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "swift",
             "swift_container": swift_container,
             "swift_object": swift_object,
@@ -367,8 +384,8 @@ class FunctionsTests(test.TestCase):
         form_data.update({
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "swift",
             "swift_container": swift_container,
             "swift_object": swift_object,
@@ -428,8 +445,8 @@ class FunctionsTests(test.TestCase):
         form_data.update({
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "image",
         })
 
@@ -456,8 +473,8 @@ class FunctionsTests(test.TestCase):
         form_data.update({
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "image",
             "image": image
         })
@@ -503,8 +520,8 @@ class FunctionsTests(test.TestCase):
         form_data.update({
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "package",
             "runtime": runtime.id,
             "entry": "main.main",
@@ -622,8 +639,8 @@ class FunctionsTests(test.TestCase):
         form_data.update({
             "name": "test_name",
             "description": "description",
-            "cpu": project_fm.CPU_MIN_VALUE,
-            "memory_size": project_fm.MEMORY_MIN_VALUE,
+            "cpu": 100,
+            "memory_size": 268435456,
             "code_type": "package",
             "entry": "main.main",
             "package_file": temp_file,
@@ -967,3 +984,90 @@ class FunctionsTests(test.TestCase):
             [
                 mock.call(test.IsHttpRequest(), function_id, version_number),
             ])
+
+    @mock.patch.object(api.qinling, 'qinlingclient')
+    def test_function_create_with_network(self, mock_qinlingclient):
+        """The network and security groups go to qinling as given."""
+        self._mock_function_version_list(mock_qinlingclient)
+        qclient = mock_qinlingclient.return_value
+        qclient.functions.create.return_value = self.functions.first()
+        qclient.runtimes.list.return_value = self.runtimes.list()
+
+        url = reverse('horizon:project:functions:create')
+        res = self.client.get(url)
+        network_field = res.context['form'].fields['network']
+        self.assertEqual(['', 'net-1'],
+                         [c[0] for c in network_field.choices],
+                         'external networks are not offered')
+
+        form_data = copy.deepcopy(FULL_FORM)
+        form_data.update({
+            "name": "test_name",
+            "code_type": "package",
+            "runtime": self.runtimes.first().id,
+            "package_file": self._create_temp_file(),
+            "network": "net-1",
+            "security_groups": ["web", "db"],
+        })
+        res = self.client.post(url, form_data)
+
+        self.assertNoFormErrors(res)
+        kwargs = qclient.functions.create.call_args[1]
+        self.assertEqual('net-1', kwargs['network'])
+        self.assertEqual(['db', 'web'],
+                         sorted(json.loads(kwargs['security_groups'])))
+
+    def _update_with_network(self, mock_qinlingclient, form_extra):
+        self._mock_function_version_list(mock_qinlingclient)
+        func = copy.deepcopy(self.functions.first())
+        func.network = 'e2e-net'
+        func.security_groups = ['web']
+        qclient = mock_qinlingclient.return_value
+        qclient.functions.get.return_value = func
+        qclient.functions.update.return_value = func
+        qclient.runtimes.list.return_value = self.runtimes.list()
+        url = reverse('horizon:project:functions:update', args=[func.id])
+        form = self.client.get(url).context['form']
+        form_data = {"function_id": func.id, "name": "test_name",
+                     "description": "", "code_type": "package",
+                     "entry": "main.main"}
+        form_data.update(form_extra)
+        res = self.client.post(url, form_data)
+        self.assertNoFormErrors(res)
+        return form, qclient.functions.update.call_args[1]
+
+    @mock.patch.object(api.qinling, 'qinlingclient')
+    def test_function_update_keeps_a_network_set_by_name(
+            self, mock_qinlingclient):
+        """A network set from the CLI by name stays, unless changed."""
+        form, kwargs = self._update_with_network(
+            mock_qinlingclient,
+            {"network": "e2e-net", "security_groups": ["web"]})
+
+        self.assertIn('e2e-net', [c[0] for c in
+                                  form.fields['network'].choices])
+        self.assertEqual('e2e-net', form.initial['network'])
+        # Unchanged: not sent, so qinling keeps the function's containers.
+        self.assertNotIn('network', kwargs)
+        self.assertNotIn('security_groups', kwargs)
+
+    @mock.patch.object(api.qinling, 'qinlingclient')
+    def test_function_update_changes_the_network(self, mock_qinlingclient):
+        _, kwargs = self._update_with_network(
+            mock_qinlingclient, {"network": "", "security_groups": []})
+
+        self.assertEqual('', kwargs['network'])
+        self.assertEqual('[]', kwargs['security_groups'])
+
+    @mock.patch.object(api.qinling, 'qinlingclient')
+    def test_create_version_page_renders(self, mock_qinlingclient):
+        """The full page (not the modal) included a template of executions."""
+        self._mock_function_version_list(mock_qinlingclient)
+        func = self.functions.first()
+        mock_qinlingclient.return_value.functions.get.return_value = func
+
+        url = reverse('horizon:project:functions:create_version',
+                      args=[func.id])
+        res = self.client.get(url)
+
+        self.assertTemplateUsed(res, 'project/functions/_create_version.html')

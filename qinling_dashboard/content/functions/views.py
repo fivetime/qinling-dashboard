@@ -114,6 +114,8 @@ class UpdateFunctionView(forms.ModalFormView):
             'swift_object': code_swift.get('object', ''),
             'image': code.get('image', ''),
             'source': source,
+            'network': getattr(func, 'network', None) or '',
+            'security_groups': getattr(func, 'security_groups', None) or [],
         })
         return initial
 

@@ -12,6 +12,9 @@
     <dt>{% trans "Image" %}</dt>
     <dd>{{ runtime.image }}</dd>
 
+    <dt>{% trans "Orchestrator" %}</dt>
+    <dd>{{ runtime.orchestrator|default:_("Default of the cloud") }}</dd>
+
     <dt>{% trans "Description" %}</dt>
     <dd>{{ runtime.description }}</dd>
 

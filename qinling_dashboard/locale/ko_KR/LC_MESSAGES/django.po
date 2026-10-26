@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: qinling-dashboard VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 22:16+0000\n"
+"POT-Creation-Date: 2026-10-26 02:46+0000\n"
 "PO-Revision-Date: 2019-11-02 09:02+0000\n"
 "Last-Translator: Hongjae Kim <neo415ha@gmail.com>\n"
 "Language-Team: Korean (South Korea)\n"
@@ -67,7 +67,7 @@ msgstr "사용 가능한 기능이 없습니다."
 msgid "Created execution of \"%s\""
 msgstr "\"%s\"을 실행 생성"
 
-#: content/executions/forms.py:133 content/functions/forms.py:454
+#: content/executions/forms.py:133 content/functions/forms.py:526
 #, fuzzy
 #| msgid "Unable to create function."
 msgid "Unable to create execution."
@@ -107,7 +107,7 @@ msgstr "ID"
 
 #: content/executions/tables.py:125
 #: content/executions/templates/executions/_detail_overview.html:9
-#: content/functions/forms.py:429 content/functions/tables.py:255
+#: content/functions/forms.py:501 content/functions/tables.py:255
 #: content/functions/templates/functions/_detail_version_overview.html:9
 msgid "Function ID"
 msgstr "기능 ID"
@@ -119,12 +119,12 @@ msgstr "기능 버전"
 
 #: content/executions/tables.py:132
 #: content/executions/templates/executions/_detail_overview.html:15
-#: content/functions/forms.py:66 content/functions/forms.py:441
+#: content/functions/forms.py:73 content/functions/forms.py:513
 #: content/functions/tables.py:135 content/functions/tables.py:252
 #: content/functions/templates/functions/_detail_overview.html:12
 #: content/functions/templates/functions/_detail_version_overview.html:12
 #: content/runtimes/forms.py:48
-#: content/runtimes/templates/runtimes/_detail_overview.html:15
+#: content/runtimes/templates/runtimes/_detail_overview.html:18
 msgid "Description"
 msgstr "설명"
 
@@ -138,8 +138,8 @@ msgstr "결과"
 #: content/functions/tables.py:145 content/functions/tables.py:264
 #: content/functions/templates/functions/_detail_overview.html:45
 #: content/functions/templates/functions/_detail_version_overview.html:24
-#: content/runtimes/tables.py:62
-#: content/runtimes/templates/runtimes/_detail_overview.html:21
+#: content/runtimes/tables.py:66
+#: content/runtimes/templates/runtimes/_detail_overview.html:24
 msgid "Created At"
 msgstr "생성 시점"
 
@@ -148,8 +148,8 @@ msgstr "생성 시점"
 #: content/functions/tables.py:148 content/functions/tables.py:267
 #: content/functions/templates/functions/_detail_overview.html:48
 #: content/functions/templates/functions/_detail_version_overview.html:27
-#: content/runtimes/tables.py:65
-#: content/runtimes/templates/runtimes/_detail_overview.html:24
+#: content/runtimes/tables.py:69
+#: content/runtimes/templates/runtimes/_detail_overview.html:27
 msgid "Updated At"
 msgstr "갱신 시점"
 
@@ -157,8 +157,8 @@ msgstr "갱신 시점"
 #: content/executions/templates/executions/_detail_overview.html:42
 #: content/functions/templates/functions/_detail_overview.html:42
 #: content/functions/templates/functions/_detail_version_overview.html:21
-#: content/runtimes/tables.py:68
-#: content/runtimes/templates/runtimes/_detail_overview.html:18
+#: content/runtimes/tables.py:72
+#: content/runtimes/templates/runtimes/_detail_overview.html:21
 msgid "Project ID"
 msgstr "프로젝트 ID"
 
@@ -201,7 +201,7 @@ msgid "Output"
 msgstr "출력"
 
 #: content/executions/templates/executions/_detail_overview.html:51
-#: content/runtimes/templates/runtimes/_detail_overview.html:32
+#: content/runtimes/templates/runtimes/_detail_overview.html:35
 msgid "Status"
 msgstr "상태"
 
@@ -227,146 +227,183 @@ msgid "Unable to retrieve execution logs."
 msgstr "실행 로그를 찾아올 수 없습니다."
 
 #: content/functions/forms.py:37
-#, python-brace-format
-msgid "Limit of cpu resource(unit: millicpu). Range: {0} ~ {1}"
+#, fuzzy
+#| msgid "Limit of cpu resource(unit: millicpu). Range: {0} ~ {1}"
+msgid "Limit of cpu resource (unit: millicpu), within the range the cloud allows."
 msgstr "CPU 자원 제한(단위: millicpu). 범위: {0} ~ {1}"
 
 #: content/functions/forms.py:40
-#, python-brace-format
-msgid "Limit of memory resource(unit: bytes). Range: {0} ~ {1} (bytes)."
+#, fuzzy
+#| msgid "Limit of memory resource(unit: bytes). Range: {0} ~ {1} (bytes)."
+msgid "Limit of memory resource (unit: bytes), within the range the cloud allows."
 msgstr "메모리 자원 제한(단위: bytes). 범위: {0} ~ {1} (bytes)."
 
-#: content/functions/forms.py:44
+#: content/functions/forms.py:43
+msgid "For the functions of runtimes run by Zun: the network of the project their containers are attached to. Without one, they get an isolated network of the project, with no router."
+msgstr ""
+
+#: content/functions/forms.py:48
+msgid "For the functions of runtimes run by Zun: the security groups of their containers."
+msgstr ""
+
+#: content/functions/forms.py:51
 msgid "Package"
 msgstr "패키지"
 
-#: content/functions/forms.py:45
+#: content/functions/forms.py:52
 msgid "Swift Container"
 msgstr "Swift 컨테이너"
 
-#: content/functions/forms.py:46
+#: content/functions/forms.py:53
 msgid "Swift Object"
 msgstr "Swift 오브젝트"
 
-#: content/functions/forms.py:47 content/runtimes/forms.py:34
+#: content/functions/forms.py:54 content/runtimes/forms.py:34
 #: content/runtimes/tables.py:59
 #: content/runtimes/templates/runtimes/_detail_overview.html:12
 msgid "Image"
 msgstr "이미지"
 
-#: content/functions/forms.py:57 content/functions/tables.py:132
+#: content/functions/forms.py:64 content/functions/tables.py:132
 #: content/functions/templates/functions/_detail_overview.html:9
 #: content/runtimes/forms.py:39 content/runtimes/tables.py:56
 #: content/runtimes/templates/runtimes/_detail_overview.html:9
 msgid "Name"
 msgstr "이름"
 
-#: content/functions/forms.py:69
+#: content/functions/forms.py:76
 msgid "CPU"
 msgstr "CPU"
 
-#: content/functions/forms.py:75
+#: content/functions/forms.py:81
 msgid "Memory Size"
 msgstr "메모리 크기"
 
-#: content/functions/forms.py:82 content/functions/forms.py:356
+#: content/functions/forms.py:87
+#: content/functions/templates/functions/_detail_overview.html:58
+msgid "Network"
+msgstr ""
+
+#: content/functions/forms.py:92
+#: content/functions/templates/functions/_detail_overview.html:61
+msgid "Security Groups"
+msgstr ""
+
+#: content/functions/forms.py:98 content/functions/forms.py:406
 msgid "Code Type"
 msgstr "코드 타입"
 
-#: content/functions/forms.py:83
+#: content/functions/forms.py:99
 msgid "Select Your Code Type."
 msgstr "코드 타입을 선택하세요."
 
-#: content/functions/forms.py:93
+#: content/functions/forms.py:109
 msgid "Code package zip file path."
 msgstr "코드 패키지 압축 파일 경로"
 
-#: content/functions/forms.py:104 content/functions/forms.py:111
-#: content/functions/forms.py:147 content/functions/forms.py:154
+#: content/functions/forms.py:120 content/functions/forms.py:127
+#: content/functions/forms.py:163 content/functions/forms.py:170
 #: content/functions/tables.py:142
 #: content/functions/templates/functions/_detail_overview.html:39
 msgid "Entry"
 msgstr "진입점"
 
-#: content/functions/forms.py:105 content/functions/forms.py:148
+#: content/functions/forms.py:121 content/functions/forms.py:164
 msgid "Function entry in the format of <module_name>.<method_name>"
 msgstr "기능 진입점 형태는 <module_name>.<method_name> "
 
-#: content/functions/forms.py:116 content/functions/forms.py:120
-#: content/functions/forms.py:159 content/functions/forms.py:163
+#: content/functions/forms.py:132 content/functions/forms.py:136
+#: content/functions/forms.py:175 content/functions/forms.py:179
 msgid "Runtime"
 msgstr "런타임"
 
-#: content/functions/forms.py:126
+#: content/functions/forms.py:142
 msgid "Container name in Swift."
 msgstr "Swift에서의 컨테이너 이름"
 
-#: content/functions/forms.py:137
+#: content/functions/forms.py:153
 msgid "Object name in Swift."
 msgstr "Swift에서의 오브젝트 이름"
 
-#: content/functions/forms.py:169
+#: content/functions/forms.py:185
 msgid "Container image name, e.g. docker.io/library/python:3.14."
 msgstr ""
 
-#: content/functions/forms.py:183
+#: content/functions/forms.py:200
 msgid "Unable to retrieve runtimes."
 msgstr "런타임을 가져오지 못했습니다."
 
-#: content/functions/forms.py:191
+#: content/functions/forms.py:208
 msgid "No runtimes found"
 msgstr "런타임을 찾지 못했습니다."
 
-#: content/functions/forms.py:204
+#: content/functions/forms.py:217
+#, fuzzy
+#| msgid "Unable to retrieve runtimes."
+msgid "Unable to retrieve networks."
+msgstr "런타임을 가져오지 못했습니다."
+
+#: content/functions/forms.py:220
+#: content/functions/templates/functions/_detail_overview.html:59
+msgid "Isolated network of the project"
+msgstr ""
+
+#: content/functions/forms.py:228
+#, fuzzy
+#| msgid "Unable to retrieve execution logs."
+msgid "Unable to retrieve security groups."
+msgstr "실행 로그를 찾아올 수 없습니다."
+
+#: content/functions/forms.py:247
 msgid "You must specify container and object both in case code type is Swift."
 msgstr "코드 타입이 Swift인 경우에 컨테이너와 오브젝트를 지정해야 합니다."
 
-#: content/functions/forms.py:210 content/functions/forms.py:232
+#: content/functions/forms.py:253 content/functions/forms.py:275
 msgid "You must specify runtime."
 msgstr "런타임을 지정해야 합니다."
 
-#: content/functions/forms.py:216
+#: content/functions/forms.py:259
 msgid "You must specify Docker image."
 msgstr "Docker 이미지를 지정해야 합니다."
 
-#: content/functions/forms.py:227
+#: content/functions/forms.py:270
 msgid "You must specify package file."
 msgstr "패키지 파일을 지정해야 합니다."
 
-#: content/functions/forms.py:339
+#: content/functions/forms.py:389
 #, python-format
 msgid "Created function \"%s\""
 msgstr "기능 생성 \"%s\""
 
-#: content/functions/forms.py:346
+#: content/functions/forms.py:396
 msgid "Unable to create function."
 msgstr "기능을 생성하는데 실패하였습니다."
 
-#: content/functions/forms.py:357
+#: content/functions/forms.py:407
 msgid "Code Type can not be changed when you update function."
 msgstr "기능을 업데이트하면 코드 타입을 바꿀 수 없습니다."
 
-#: content/functions/forms.py:415
+#: content/functions/forms.py:487
 #, python-format
 msgid "Updated function \"%s\""
 msgstr "갱신된 기능 \"%s\""
 
-#: content/functions/forms.py:422
+#: content/functions/forms.py:494
 #, python-format
 msgid "Unable to update function %s"
 msgstr "기능 갱신 실패 \"%s\""
 
-#: content/functions/forms.py:430
+#: content/functions/forms.py:502
 msgid "Function which new version will be created."
 msgstr "새로운 버전이 생성될 기능"
 
-#: content/functions/forms.py:449
+#: content/functions/forms.py:521
 #, python-format
 msgid "Created new version of \"%s\""
 msgstr "새로운 버전\"%s\" 생성"
 
 #: content/functions/panel.py:20 content/functions/tables.py:159
-#: content/functions/views.py:154
+#: content/functions/views.py:156
 msgid "Functions"
 msgstr "기능"
 
@@ -376,7 +413,7 @@ msgstr "기능"
 msgid "Create Function"
 msgstr "기능 생성"
 
-#: content/functions/tables.py:39 content/functions/views.py:124
+#: content/functions/tables.py:39 content/functions/views.py:126
 msgid "Create Version"
 msgstr "버전 생성"
 
@@ -494,44 +531,44 @@ msgstr "기능 버전 세부사항"
 msgid "Unable to retrieve function details."
 msgstr "기능 세부사항을 가져오지 못했습니다."
 
-#: content/functions/views.py:161
+#: content/functions/views.py:163
 msgid "Unable to retrieve functions list."
 msgstr "기능 리스트를 가져오지 못했습니다."
 
-#: content/functions/views.py:169
+#: content/functions/views.py:171
 msgid "Function Details: {{ resource_name }}"
 msgstr "기능 세부사항:{{ resource_name }}"
 
-#: content/functions/views.py:180
+#: content/functions/views.py:182
 #, python-format
 msgid "Unable to retrieve details for Function \"%s\"."
 msgstr "기능 \"%s\"의 세부사항을 가져오지 못했습니다."
 
-#: content/functions/views.py:206
+#: content/functions/views.py:208
 #, python-format
 msgid "Unable to get executions of this function \"%s\"."
 msgstr "기능 \"%s\"의 실행을 가져오지 못했습니다."
 
-#: content/functions/views.py:217
+#: content/functions/views.py:219
 #, python-format
 msgid "Unable to get versions of this function \"%s\"."
 msgstr "기능 \"%s\"의 버전을 가져오지 못했습니다."
 
-#: content/functions/views.py:238
+#: content/functions/views.py:240
 msgid "Function Version Details: {{ version.function_id }} (Version Number={{ version_number }})"
 msgstr "기능 버전 세부사항: {{ version.function_id }} (Version Number={{ version_number }})"
 
-#: content/functions/views.py:264
+#: content/functions/views.py:266
 #, python-format
 msgid "Unable to retrieve details for function version \"%s\"."
 msgstr "기능 버전\"%s\"의 세부사항을 가져오지 못했습니다."
 
-#: content/functions/views.py:306
+#: content/functions/views.py:308
 #, python-format
 msgid "Function code not found: %s"
 msgstr ""
 
-#: content/functions/views.py:308
+#: content/functions/views.py:310
 #, python-format
 msgid "Error downloading function: %s"
 msgstr "기능 다운로드 오류:%s"
@@ -544,16 +581,30 @@ msgstr "신뢰할 수 없는 이미지로 만들기"
 msgid "Check this item if you would like to create untrusted runtime"
 msgstr "신뢰할 수 없는 런타임을 생성하려면 이 항목을 선택하십시오."
 
-#: content/runtimes/forms.py:80
+#: content/runtimes/forms.py:60 content/runtimes/tables.py:63
+#: content/runtimes/templates/runtimes/_detail_overview.html:15
+msgid "Orchestrator"
+msgstr ""
+
+#: content/runtimes/forms.py:61
+msgid "What runs the functions of the runtime: Kubernetes (shared pools of the platform) or Zun (containers in each function's own project). It cannot be changed later."
+msgstr ""
+
+#: content/runtimes/forms.py:65
+#: content/runtimes/templates/runtimes/_detail_overview.html:16
+msgid "Default of the cloud"
+msgstr ""
+
+#: content/runtimes/forms.py:94
 #, python-format
 msgid "Created runtime \"%s\""
 msgstr "%s 런타임 생성"
 
-#: content/runtimes/forms.py:87
+#: content/runtimes/forms.py:101
 msgid "Unable to create runtime."
 msgstr "런타임을 생성할 수 없음."
 
-#: content/runtimes/panel.py:20 content/runtimes/tables.py:87
+#: content/runtimes/panel.py:20 content/runtimes/tables.py:91
 #: content/runtimes/views.py:41
 msgid "Runtimes"
 msgstr "런타임"
@@ -564,8 +615,12 @@ msgstr "런타임"
 msgid "Create Runtime"
 msgstr "런타임 만들기"
 
-#: content/runtimes/tables.py:71
-#: content/runtimes/templates/runtimes/_detail_overview.html:28
+#: content/runtimes/tables.py:62
+msgid "Default"
+msgstr ""
+
+#: content/runtimes/tables.py:75
+#: content/runtimes/templates/runtimes/_detail_overview.html:31
 msgid "Is Public"
 msgstr "공개 여부"
 
@@ -573,7 +628,7 @@ msgstr "공개 여부"
 msgid "Create a new runtime."
 msgstr "새 런타임을 생성하십시오."
 
-#: content/runtimes/templates/runtimes/_detail_overview.html:29
+#: content/runtimes/templates/runtimes/_detail_overview.html:32
 msgid "Unknown"
 msgstr "알 수 없음"
 

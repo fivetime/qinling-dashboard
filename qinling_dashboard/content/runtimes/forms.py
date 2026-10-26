@@ -56,6 +56,17 @@ class CreateRuntimeForm(forms.SelfHandlingForm):
         initial=False
     )
 
+    orchestrator = forms.ThemableChoiceField(
+        label=_("Orchestrator"),
+        help_text=_("What runs the functions of the runtime: Kubernetes "
+                    "(shared pools of the platform) or Zun (containers in "
+                    "each function's own project). It cannot be changed "
+                    "later."),
+        choices=[("", _("Default of the cloud")),
+                 ("kubernetes", "Kubernetes"),
+                 ("zun", "Zun")],
+        required=False)
+
     def __init__(self, request, *args, **kwargs):
         super(CreateRuntimeForm, self).__init__(request, *args, **kwargs)
 
@@ -74,6 +85,9 @@ class CreateRuntimeForm(forms.SelfHandlingForm):
         if context.get('untrusted'):
             trusted = not bool(context.get('untrusted'))
             params.update({'trusted': trusted})
+
+        if context.get('orchestrator'):
+            params.update({'orchestrator': context.get('orchestrator')})
 
         try:
             api.qinling.runtime_create(request, **params)

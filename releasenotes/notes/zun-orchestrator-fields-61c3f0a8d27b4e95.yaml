@@ -1,0 +1,16 @@
+---
+features:
+  - |
+    Runtimes can be created with an orchestrator (Kubernetes or Zun), which
+    the runtime list and details show. Functions take a network of the
+    project and security groups, for the runtimes Zun runs; the function
+    details show them. Needs qinling 17.1 and python-qinlingclient 6.1.
+fixes:
+  - |
+    The CPU and memory of a function were held to the upstream defaults of
+    qinling (100 to 300 millicpu, 32 to 128 MiB) whatever the cloud allows;
+    the range is left to qinling.
+  - |
+    The update function and create version pages, when opened on their own
+    rather than as a modal, included templates of the executions panel that
+    do not exist.

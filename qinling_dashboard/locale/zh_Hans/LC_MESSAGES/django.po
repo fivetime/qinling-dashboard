@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: qinling-dashboard\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-24 22:17+0000\n"
+"POT-Creation-Date: 2026-10-26 02:46+0000\n"
 "PO-Revision-Date: 2026-10-24 22:18+0000\n"
 "Last-Translator: Simon Zhou <jp.zdm2008@gmail.com>\n"
 "Language: zh_Hans\n"
@@ -63,7 +63,7 @@ msgstr "没有可用的函数。"
 msgid "Created execution of \"%s\""
 msgstr "已创建函数“%s”的执行记录"
 
-#: content/executions/forms.py:133 content/functions/forms.py:454
+#: content/executions/forms.py:133 content/functions/forms.py:526
 msgid "Unable to create execution."
 msgstr "无法创建执行记录。"
 
@@ -99,7 +99,7 @@ msgstr "ID"
 
 #: content/executions/tables.py:125
 #: content/executions/templates/executions/_detail_overview.html:9
-#: content/functions/forms.py:429 content/functions/tables.py:255
+#: content/functions/forms.py:501 content/functions/tables.py:255
 #: content/functions/templates/functions/_detail_version_overview.html:9
 msgid "Function ID"
 msgstr "函数 ID"
@@ -111,12 +111,12 @@ msgstr "函数版本"
 
 #: content/executions/tables.py:132
 #: content/executions/templates/executions/_detail_overview.html:15
-#: content/functions/forms.py:66 content/functions/forms.py:441
+#: content/functions/forms.py:73 content/functions/forms.py:513
 #: content/functions/tables.py:135 content/functions/tables.py:252
 #: content/functions/templates/functions/_detail_overview.html:12
 #: content/functions/templates/functions/_detail_version_overview.html:12
 #: content/runtimes/forms.py:48
-#: content/runtimes/templates/runtimes/_detail_overview.html:15
+#: content/runtimes/templates/runtimes/_detail_overview.html:18
 msgid "Description"
 msgstr "描述"
 
@@ -130,8 +130,8 @@ msgstr "结果"
 #: content/functions/tables.py:145 content/functions/tables.py:264
 #: content/functions/templates/functions/_detail_overview.html:45
 #: content/functions/templates/functions/_detail_version_overview.html:24
-#: content/runtimes/tables.py:62
-#: content/runtimes/templates/runtimes/_detail_overview.html:21
+#: content/runtimes/tables.py:66
+#: content/runtimes/templates/runtimes/_detail_overview.html:24
 msgid "Created At"
 msgstr "创建时间"
 
@@ -140,8 +140,8 @@ msgstr "创建时间"
 #: content/functions/tables.py:148 content/functions/tables.py:267
 #: content/functions/templates/functions/_detail_overview.html:48
 #: content/functions/templates/functions/_detail_version_overview.html:27
-#: content/runtimes/tables.py:65
-#: content/runtimes/templates/runtimes/_detail_overview.html:24
+#: content/runtimes/tables.py:69
+#: content/runtimes/templates/runtimes/_detail_overview.html:27
 msgid "Updated At"
 msgstr "更新时间"
 
@@ -149,8 +149,8 @@ msgstr "更新时间"
 #: content/executions/templates/executions/_detail_overview.html:42
 #: content/functions/templates/functions/_detail_overview.html:42
 #: content/functions/templates/functions/_detail_version_overview.html:21
-#: content/runtimes/tables.py:68
-#: content/runtimes/templates/runtimes/_detail_overview.html:18
+#: content/runtimes/tables.py:72
+#: content/runtimes/templates/runtimes/_detail_overview.html:21
 msgid "Project ID"
 msgstr "项目 ID"
 
@@ -193,7 +193,7 @@ msgid "Output"
 msgstr "输出"
 
 #: content/executions/templates/executions/_detail_overview.html:51
-#: content/runtimes/templates/runtimes/_detail_overview.html:32
+#: content/runtimes/templates/runtimes/_detail_overview.html:35
 msgid "Status"
 msgstr "状态"
 
@@ -218,147 +218,180 @@ msgstr "无法获取执行记录“%s”的详情。"
 msgid "Unable to retrieve execution logs."
 msgstr "无法获取执行日志。"
 
+# | msgid "Limit of cpu resource(unit: millicpu). Range: {0} ~ {1}"
 #: content/functions/forms.py:37
-#, python-brace-format
-msgid "Limit of cpu resource(unit: millicpu). Range: {0} ~ {1}"
-msgstr "CPU 上限（单位：毫核）。范围：{0} ~ {1}"
+msgid "Limit of cpu resource (unit: millicpu), within the range the cloud allows."
+msgstr "CPU 上限（单位：毫核），须在云平台允许的范围内。"
 
+# | msgid "Limit of memory resource(unit: bytes). Range: {0} ~ {1} (bytes)."
 #: content/functions/forms.py:40
-#, python-brace-format
-msgid "Limit of memory resource(unit: bytes). Range: {0} ~ {1} (bytes)."
-msgstr "内存上限（单位：字节）。范围：{0} ~ {1}（字节）。"
+msgid "Limit of memory resource (unit: bytes), within the range the cloud allows."
+msgstr "内存上限（单位：字节），须在云平台允许的范围内。"
 
-#: content/functions/forms.py:44
+#: content/functions/forms.py:43
+msgid "For the functions of runtimes run by Zun: the network of the project their containers are attached to. Without one, they get an isolated network of the project, with no router."
+msgstr "用于由 Zun 运行的运行时上的函数：函数容器接入的本项目网络。不选时使用本项目的隔离网络（没有路由器）。"
+
+#: content/functions/forms.py:48
+msgid "For the functions of runtimes run by Zun: the security groups of their containers."
+msgstr "用于由 Zun 运行的运行时上的函数：函数容器的安全组。"
+
+#: content/functions/forms.py:51
 msgid "Package"
 msgstr "代码包"
 
-#: content/functions/forms.py:45
+#: content/functions/forms.py:52
 msgid "Swift Container"
 msgstr "Swift 容器"
 
-#: content/functions/forms.py:46
+#: content/functions/forms.py:53
 msgid "Swift Object"
 msgstr "Swift 对象"
 
-#: content/functions/forms.py:47 content/runtimes/forms.py:34
+#: content/functions/forms.py:54 content/runtimes/forms.py:34
 #: content/runtimes/tables.py:59
 #: content/runtimes/templates/runtimes/_detail_overview.html:12
 msgid "Image"
 msgstr "镜像"
 
-#: content/functions/forms.py:57 content/functions/tables.py:132
+#: content/functions/forms.py:64 content/functions/tables.py:132
 #: content/functions/templates/functions/_detail_overview.html:9
 #: content/runtimes/forms.py:39 content/runtimes/tables.py:56
 #: content/runtimes/templates/runtimes/_detail_overview.html:9
 msgid "Name"
 msgstr "名称"
 
-#: content/functions/forms.py:69
+#: content/functions/forms.py:76
 msgid "CPU"
 msgstr "CPU"
 
-#: content/functions/forms.py:75
+#: content/functions/forms.py:81
 msgid "Memory Size"
 msgstr "内存大小"
 
-#: content/functions/forms.py:82 content/functions/forms.py:356
+#: content/functions/forms.py:87
+#: content/functions/templates/functions/_detail_overview.html:58
+msgid "Network"
+msgstr "网络"
+
+#: content/functions/forms.py:92
+#: content/functions/templates/functions/_detail_overview.html:61
+msgid "Security Groups"
+msgstr "安全组"
+
+#: content/functions/forms.py:98 content/functions/forms.py:406
 msgid "Code Type"
 msgstr "代码类型"
 
-#: content/functions/forms.py:83
+#: content/functions/forms.py:99
 msgid "Select Your Code Type."
 msgstr "选择代码类型。"
 
-#: content/functions/forms.py:93
+#: content/functions/forms.py:109
 msgid "Code package zip file path."
 msgstr "代码包（zip 文件）。"
 
-#: content/functions/forms.py:104 content/functions/forms.py:111
-#: content/functions/forms.py:147 content/functions/forms.py:154
+#: content/functions/forms.py:120 content/functions/forms.py:127
+#: content/functions/forms.py:163 content/functions/forms.py:170
 #: content/functions/tables.py:142
 #: content/functions/templates/functions/_detail_overview.html:39
 msgid "Entry"
 msgstr "入口"
 
-#: content/functions/forms.py:105 content/functions/forms.py:148
+#: content/functions/forms.py:121 content/functions/forms.py:164
 msgid "Function entry in the format of <module_name>.<method_name>"
 msgstr "函数入口，格式为 <模块名>.<函数名>"
 
-#: content/functions/forms.py:116 content/functions/forms.py:120
-#: content/functions/forms.py:159 content/functions/forms.py:163
+#: content/functions/forms.py:132 content/functions/forms.py:136
+#: content/functions/forms.py:175 content/functions/forms.py:179
 msgid "Runtime"
 msgstr "运行时"
 
-#: content/functions/forms.py:126
+#: content/functions/forms.py:142
 msgid "Container name in Swift."
 msgstr "Swift 中的容器名。"
 
-#: content/functions/forms.py:137
+#: content/functions/forms.py:153
 msgid "Object name in Swift."
 msgstr "Swift 中的对象名。"
 
-#: content/functions/forms.py:169
+#: content/functions/forms.py:185
 msgid "Container image name, e.g. docker.io/library/python:3.14."
 msgstr "容器镜像名，例如 docker.io/library/python:3.14。"
 
-#: content/functions/forms.py:183
+#: content/functions/forms.py:200
 msgid "Unable to retrieve runtimes."
 msgstr "无法获取运行时。"
 
-#: content/functions/forms.py:191
+#: content/functions/forms.py:208
 msgid "No runtimes found"
 msgstr "没有运行时"
 
-#: content/functions/forms.py:204
+# | msgid "Unable to retrieve runtimes."
+#: content/functions/forms.py:217
+msgid "Unable to retrieve networks."
+msgstr "无法获取网络。"
+
+#: content/functions/forms.py:220
+#: content/functions/templates/functions/_detail_overview.html:59
+msgid "Isolated network of the project"
+msgstr "本项目的隔离网络"
+
+# | msgid "Unable to retrieve execution logs."
+#: content/functions/forms.py:228
+msgid "Unable to retrieve security groups."
+msgstr "无法获取安全组。"
+
+#: content/functions/forms.py:247
 msgid "You must specify container and object both in case code type is Swift."
 msgstr "代码类型为 Swift 时必须同时指定容器和对象。"
 
-#: content/functions/forms.py:210 content/functions/forms.py:232
+#: content/functions/forms.py:253 content/functions/forms.py:275
 msgid "You must specify runtime."
 msgstr "必须指定运行时。"
 
-#: content/functions/forms.py:216
+#: content/functions/forms.py:259
 msgid "You must specify Docker image."
 msgstr "必须指定容器镜像。"
 
-#: content/functions/forms.py:227
+#: content/functions/forms.py:270
 msgid "You must specify package file."
 msgstr "必须指定代码包文件。"
 
-#: content/functions/forms.py:339
+#: content/functions/forms.py:389
 #, python-format
 msgid "Created function \"%s\""
 msgstr "已创建函数“%s”"
 
-#: content/functions/forms.py:346
+#: content/functions/forms.py:396
 msgid "Unable to create function."
 msgstr "无法创建函数。"
 
-#: content/functions/forms.py:357
+#: content/functions/forms.py:407
 msgid "Code Type can not be changed when you update function."
 msgstr "更新函数时不能修改代码类型。"
 
-#: content/functions/forms.py:415
+#: content/functions/forms.py:487
 #, python-format
 msgid "Updated function \"%s\""
 msgstr "已更新函数“%s”"
 
-#: content/functions/forms.py:422
+#: content/functions/forms.py:494
 #, python-format
 msgid "Unable to update function %s"
 msgstr "无法更新函数 %s"
 
-#: content/functions/forms.py:430
+#: content/functions/forms.py:502
 msgid "Function which new version will be created."
 msgstr "要创建新版本的函数。"
 
-#: content/functions/forms.py:449
+#: content/functions/forms.py:521
 #, python-format
 msgid "Created new version of \"%s\""
 msgstr "已为“%s”创建新版本"
 
 #: content/functions/panel.py:20 content/functions/tables.py:159
-#: content/functions/views.py:154
+#: content/functions/views.py:156
 msgid "Functions"
 msgstr "函数"
 
@@ -368,7 +401,7 @@ msgstr "函数"
 msgid "Create Function"
 msgstr "创建函数"
 
-#: content/functions/tables.py:39 content/functions/views.py:124
+#: content/functions/tables.py:39 content/functions/views.py:126
 msgid "Create Version"
 msgstr "创建版本"
 
@@ -482,44 +515,44 @@ msgstr "函数版本详情"
 msgid "Unable to retrieve function details."
 msgstr "无法获取函数详情。"
 
-#: content/functions/views.py:161
+#: content/functions/views.py:163
 msgid "Unable to retrieve functions list."
 msgstr "无法获取函数列表。"
 
-#: content/functions/views.py:169
+#: content/functions/views.py:171
 msgid "Function Details: {{ resource_name }}"
 msgstr "函数详情：{{ resource_name }}"
 
-#: content/functions/views.py:180
+#: content/functions/views.py:182
 #, python-format
 msgid "Unable to retrieve details for Function \"%s\"."
 msgstr "无法获取函数“%s”的详情。"
 
-#: content/functions/views.py:206
+#: content/functions/views.py:208
 #, python-format
 msgid "Unable to get executions of this function \"%s\"."
 msgstr "无法获取函数“%s”的执行记录。"
 
-#: content/functions/views.py:217
+#: content/functions/views.py:219
 #, python-format
 msgid "Unable to get versions of this function \"%s\"."
 msgstr "无法获取函数“%s”的版本。"
 
-#: content/functions/views.py:238
+#: content/functions/views.py:240
 msgid "Function Version Details: {{ version.function_id }} (Version Number={{ version_number }})"
 msgstr "函数版本详情：{{ version.function_id }}（版本号 {{ version_number }}）"
 
-#: content/functions/views.py:264
+#: content/functions/views.py:266
 #, python-format
 msgid "Unable to retrieve details for function version \"%s\"."
 msgstr "无法获取函数版本“%s”的详情。"
 
-#: content/functions/views.py:306
+#: content/functions/views.py:308
 #, python-format
 msgid "Function code not found: %s"
 msgstr "找不到函数代码：%s"
 
-#: content/functions/views.py:308
+#: content/functions/views.py:310
 #, python-format
 msgid "Error downloading function: %s"
 msgstr "下载函数出错：%s"
@@ -532,16 +565,30 @@ msgstr "作为不受信任的镜像创建"
 msgid "Check this item if you would like to create untrusted runtime"
 msgstr "勾选后创建不受信任的运行时"
 
-#: content/runtimes/forms.py:80
+#: content/runtimes/forms.py:60 content/runtimes/tables.py:63
+#: content/runtimes/templates/runtimes/_detail_overview.html:15
+msgid "Orchestrator"
+msgstr "编排后端"
+
+#: content/runtimes/forms.py:61
+msgid "What runs the functions of the runtime: Kubernetes (shared pools of the platform) or Zun (containers in each function's own project). It cannot be changed later."
+msgstr "由谁运行该运行时上的函数：Kubernetes（平台共享的池）或 Zun（每个函数自己项目里的容器）。创建后不能更改。"
+
+#: content/runtimes/forms.py:65
+#: content/runtimes/templates/runtimes/_detail_overview.html:16
+msgid "Default of the cloud"
+msgstr "云平台默认"
+
+#: content/runtimes/forms.py:94
 #, python-format
 msgid "Created runtime \"%s\""
 msgstr "已创建运行时“%s”"
 
-#: content/runtimes/forms.py:87
+#: content/runtimes/forms.py:101
 msgid "Unable to create runtime."
 msgstr "无法创建运行时。"
 
-#: content/runtimes/panel.py:20 content/runtimes/tables.py:87
+#: content/runtimes/panel.py:20 content/runtimes/tables.py:91
 #: content/runtimes/views.py:41
 msgid "Runtimes"
 msgstr "运行时"
@@ -552,8 +599,12 @@ msgstr "运行时"
 msgid "Create Runtime"
 msgstr "创建运行时"
 
-#: content/runtimes/tables.py:71
-#: content/runtimes/templates/runtimes/_detail_overview.html:28
+#: content/runtimes/tables.py:62
+msgid "Default"
+msgstr "默认"
+
+#: content/runtimes/tables.py:75
+#: content/runtimes/templates/runtimes/_detail_overview.html:31
 msgid "Is Public"
 msgstr "公共"
 
@@ -561,7 +612,7 @@ msgstr "公共"
 msgid "Create a new runtime."
 msgstr "创建一个新运行时。"
 
-#: content/runtimes/templates/runtimes/_detail_overview.html:29
+#: content/runtimes/templates/runtimes/_detail_overview.html:32
 msgid "Unknown"
 msgstr "未知"
 

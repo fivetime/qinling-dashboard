@@ -13,6 +13,8 @@
 # License for the specific language governing permissions and limitations
 # under the License.
 
+import json
+
 from django.urls import reverse
 
 from django.utils.translation import gettext_lazy as _
@@ -21,6 +23,8 @@ from horizon import exceptions
 from horizon import forms
 from horizon import messages
 
+from openstack_dashboard import api as os_api
+
 from qinling_dashboard import api
 
 from qinling_dashboard.utils import calculate_md5
@@ -28,18 +32,21 @@ from qinling_dashboard.utils import calculate_md5
 from qinling_dashboard import validators
 
 
-CPU_MIN_VALUE = 100
-CPU_MAX_VALUE = 300
-MEMORY_MIN_VALUE = 33554432
-MEMORY_MAX_VALUE = 134217728
+# The ranges are qinling's ([resource_limits]), which the deployment sets
+# and the API checks; the form does not repeat them.
+CPU_HELP_TEXT = _("Limit of cpu resource (unit: millicpu), within the "
+                  "range the cloud allows.")
 
+MEMORY_HELP_TEXT = _("Limit of memory resource (unit: bytes), within the "
+                     "range the cloud allows.")
 
-CPU_HELP_TEXT = _("Limit of cpu resource(unit: millicpu). Range: {0} ~ {1}").\
-    format(CPU_MIN_VALUE, CPU_MAX_VALUE)
+NETWORK_HELP_TEXT = _("For the functions of runtimes run by Zun: the "
+                      "network of the project their containers are "
+                      "attached to. Without one, they get an isolated "
+                      "network of the project, with no router.")
 
-MEMORY_HELP_TEXT = _("Limit of memory resource(unit: bytes). "
-                     "Range: {0} ~ {1} (bytes).").format(MEMORY_MIN_VALUE,
-                                                         MEMORY_MAX_VALUE)
+SECURITY_GROUPS_HELP_TEXT = _("For the functions of runtimes run by Zun: "
+                              "the security groups of their containers.")
 
 UPLOAD_PACKAGE_LABEL = _('Package')
 UPLOAD_SWIFT_CONTAINER_LABEL = _('Swift Container')
@@ -68,15 +75,24 @@ class CreateFunctionForm(forms.SelfHandlingForm):
 
     cpu = forms.IntegerField(label=_("CPU"),
                              help_text=CPU_HELP_TEXT,
-                             min_value=CPU_MIN_VALUE,
-                             max_value=CPU_MAX_VALUE,
+                             min_value=1,
                              required=False)
 
     memory_size = forms.IntegerField(label=_("Memory Size"),
                                      help_text=MEMORY_HELP_TEXT,
-                                     min_value=MEMORY_MIN_VALUE,
-                                     max_value=MEMORY_MAX_VALUE,
+                                     min_value=1,
                                      required=False)
+
+    network = forms.ThemableChoiceField(
+        label=_("Network"),
+        help_text=NETWORK_HELP_TEXT,
+        required=False)
+
+    security_groups = forms.MultipleChoiceField(
+        label=_("Security Groups"),
+        help_text=SECURITY_GROUPS_HELP_TEXT,
+        widget=forms.CheckboxSelectMultiple(),
+        required=False)
 
     code_type = forms.ThemableChoiceField(
         label=_("Code Type"),
@@ -192,11 +208,37 @@ class CreateFunctionForm(forms.SelfHandlingForm):
             runtime_list.insert(0, ("", _("No runtimes found")))
         return runtime_list
 
+    def get_network_choices(self, request):
+        try:
+            networks = os_api.neutron.network_list_for_tenant(
+                request, request.user.project_id)
+        except Exception:
+            networks = []
+            exceptions.handle(request, _('Unable to retrieve networks.'))
+        choices = sorted((n.id, n.name_or_id) for n in networks
+                         if not getattr(n, 'router:external', False))
+        return [("", _("Isolated network of the project"))] + choices
+
+    def get_security_group_choices(self, request):
+        try:
+            groups = os_api.neutron.security_group_list(request)
+        except Exception:
+            groups = []
+            exceptions.handle(request,
+                              _('Unable to retrieve security groups.'))
+        return sorted((g.name, g.name) for g in groups)
+
     def __init__(self, request, *args, **kwargs):
         super(CreateFunctionForm, self).__init__(request, *args, **kwargs)
         runtime_choices = self.get_runtime_choices(request)
         self.fields['runtime'].choices = runtime_choices
         self.fields['runtime_swift'].choices = runtime_choices
+        if 'network' in self.fields:
+            self.fields['network'].choices = self.get_network_choices(
+                request)
+        if 'security_groups' in self.fields:
+            self.fields['security_groups'].choices = (
+                self.get_security_group_choices(request))
 
     def _validation_for_swift_case(self, cleaned):
         swift_container = cleaned.get('swift_container', None)
@@ -324,6 +366,13 @@ class CreateFunctionForm(forms.SelfHandlingForm):
         if context.get('memory_size'):
             params.update({'memory_size': int(context.get('memory_size'))})
 
+        if context.get('network'):
+            params.update({'network': context.get('network')})
+
+        if context.get('security_groups'):
+            params.update({'security_groups': json.dumps(
+                list(context.get('security_groups')))})
+
         code_type = context.get('code_type')
 
         if code_type == 'package':
@@ -374,7 +423,8 @@ class UpdateFunctionForm(CreateFunctionForm):
 
         # written field names here will be regarded as updatable
         common_fields = ['name', 'description',
-                         'code_type', 'function_id']
+                         'code_type', 'function_id', 'network',
+                         'security_groups']
         available_fields = {
             'package': ['package_file', 'entry', 'cpu', 'memory_size'],
             'swift': [],
@@ -385,6 +435,18 @@ class UpdateFunctionForm(CreateFunctionForm):
         for field_name in field_names:
             if field_name not in available_fields:
                 del self.fields[field_name]
+
+        # A network or security groups set otherwise (by name or ID, from
+        # the CLI) stay choices, so that saving the form keeps them.
+        network = self.initial.get('network')
+        choices = self.fields['network'].choices
+        if network and network not in [c[0] for c in choices]:
+            self.fields['network'].choices = choices + [(network, network)]
+        groups = self.initial.get('security_groups') or []
+        choices = self.fields['security_groups'].choices
+        known = [c[0] for c in choices]
+        self.fields['security_groups'].choices = choices + [
+            (g, g) for g in groups if g not in known]
 
     def handle(self, request, context):
         # basic parameters
@@ -398,6 +460,15 @@ class UpdateFunctionForm(CreateFunctionForm):
 
         if context.get('memory_size'):
             params.update({'memory_size': int(context.get('memory_size'))})
+
+        # Only when changed: qinling drops the containers of a function
+        # whose network changes.
+        network = context.get('network') or ''
+        if network != (self.initial.get('network') or ''):
+            params.update({'network': network})
+        groups = sorted(context.get('security_groups') or [])
+        if groups != sorted(self.initial.get('security_groups') or []):
+            params.update({'security_groups': json.dumps(groups)})
 
         code_type = context.get('code_type')
 

@@ -54,5 +54,13 @@
     <dt>{% trans "Memory Size (Bytes)" %}</dt>
     <dd>{{ function.memory_size }}</dd>
 
+    {% if function.network or function.security_groups %}
+    <dt>{% trans "Network" %}</dt>
+    <dd>{{ function.network|default:_("Isolated network of the project") }}</dd>
+
+    <dt>{% trans "Security Groups" %}</dt>
+    <dd>{{ function.security_groups|join:", "|default:"-" }}</dd>
+    {% endif %}
+
   </dl>
 </div>
